@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+</head>
+
+<body>
+    <h1>Login</h1>
+    <form id="login-form">
+        <input type="email" id="email" placeholder="Email" /> <br><br>
+        <input type="password" id="password" placeholder="Password" /> <br><br>
+        <input type="submit" value="Login" />
+    </form>
+
+    <script>
+
+        Logged()
+        async function Logged(event) {
+            const result = await fetch('/api/checkauth', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then((res) => res.json())
+
+            if (result.status === 'ok') {
+                Redirect()
+            } 
+            // else {
+            //     alert(result.message)
+            // }
+        }
+
+
+
+        const form = document.getElementById('login-form')
+        form.addEventListener('submit', login)
+
+        async function login(event) {
+            event.preventDefault()
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+
+            const result = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            }).then((res) => res.json())
+
+            if (result.status === 'ok') {
+                console.log('Got the token: ', result.token)
+                alert('Success')
+                Redirect();
+            } else {
+                alert(result.message)
+            }
+        }
+        function Redirect() {
+            window.location = "./page.html";
+        }
+        
+    </script>
+</body>
+
+</html>

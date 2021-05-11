@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+</head>
+
+<body>
+    <h1>Sign Up</h1>
+    <form id="signup-form">
+        <input type="email" id="email" placeholder="Email" /> <br><br>
+        <input type="username" id="username" placeholder="Username" /> <br><br>
+        <input type="password" id="password" placeholder="Password" /> <br><br>
+        <input type="submit" value="Sign Up" />
+    </form>
+
+    <script>
+
+        Logged()
+        async function Logged(event) {
+            const result = await fetch('/api/checkauth', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then((res) => res.json())
+
+            if (result.status === 'ok') {
+                location.assign('./page.html');
+            } 
+            // else {
+            //     alert(result.message)
+            // }
+        }
+
+
+        const form = document.getElementById('signup-form')
+        form.addEventListener('submit', registerUser)
+
+        async function registerUser(event) {
+            event.preventDefault()
+            const email = document.getElementById('email').value
+            const username = document.getElementById('username').value
+            const password = document.getElementById('password').value
+
+            const result = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    username,
+                    password
+                })
+            }).then((res) => res.json())
+
+            if (result.status === 'ok') {
+                alert('Success')
+                Redirect()
+            } else {
+                alert(result.message)
+                console.log(result.message)
+            }
+        }
+        function Redirect() {
+            window.location = "./registerSuccess.html";
+        }
+    </script>
+</body>
+
+</html>

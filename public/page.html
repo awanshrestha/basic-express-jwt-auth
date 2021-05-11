@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Authorized Page</title>
+</head>
+
+<body>
+    <h1>User Page</h1>
+    <p id="status">
+        User not Logged in.
+    </p>
+    <p>
+        <a href="/api/logout">Logout</a>
+    </p>
+
+    <script>
+        Logged()
+        async function Logged(event) {
+
+            const result = await fetch('/api/checkauth', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then((res) => res.json())
+
+            if (result.status === 'ok') {
+                console.log('Logged In')
+                document.getElementById('status').innerHTML = "User Logged In"
+            } else {
+                alert(result.message)
+                Redirect()
+            }
+        }
+        function Redirect() {
+            window.location = "./login.html";
+        }
+    </script>
+</body>
+
+</html>
